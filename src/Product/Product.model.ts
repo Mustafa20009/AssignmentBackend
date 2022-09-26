@@ -4,6 +4,7 @@ export const ProductSchema = new mongo.Schema({
     type: String,
     required: [true, 'Name is require'],
     minlength: [2, 'Enter minimum 2 character of name'],
+    lowercase: true
   },
   price: {
     type: [Number,"Price should be a nummber"],

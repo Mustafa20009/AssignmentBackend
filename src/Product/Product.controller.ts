@@ -12,7 +12,7 @@ export class ProductController {
     @Body('inventDate') inventDate: Date,
   ) {
     let p = await this.productService.insertProductMethord(
-      name.toLowerCase(),
+      name,
       price,
       description,
       inventDate,
