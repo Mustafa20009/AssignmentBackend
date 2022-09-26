@@ -69,7 +69,7 @@ export class ProductService {
       );
       return product;
     } catch (error) {
-      throw new NotFoundException('Product Did not Found');
+      throw new NotFoundException('Product  Did not Found');
     }
   }
 }
