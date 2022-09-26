@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Product } from './Product.model';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -13,17 +17,27 @@ export class ProductService {
     description: string,
     inventDate: Date,
   ) {
-    const product = await new this.productModel({
-      name,
-      price,
-      description,
-      inventDate,
-    });
-    let result = product.save();
-    return result;
+    try {
+      const product = await new this.productModel({
+        name,
+        price,
+        description,
+        inventDate,
+      });
+      let result = await product.save();
+
+      return result;
+    } catch (error) {
+      let errorsArr = Object.values(error.errors).map(
+        (v: { message: string }, k) => {
+          return v?.message;
+        },
+      );
+      throw new BadRequestException(errorsArr[0]);
+    }
   }
-  async getAllProduct(name:string) {
-    return await this.productModel.find({"name" : {$regex : name}});
+  async getAllProduct(name: string) {
+    return await this.productModel.find({ name: { $regex: name } });
   }
   async singleProduct(id: string) {
     try {
@@ -58,7 +72,4 @@ export class ProductService {
       throw new NotFoundException('Product Did not Found');
     }
   }
-
-
-  
 }
